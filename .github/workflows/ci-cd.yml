@@ -9,7 +9,7 @@ on:
       - main
 
 jobs:
-  build-and-test:
+  build-test-push:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,6 +29,16 @@ jobs:
         run: |
           python -c "from app import app; print('Flask application test passed')"
 
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build Docker image
         run: |
-          docker build -t se-lab-ex24:latest .
+          docker build -t oaviksha/se-lab-ex24:latest .
+
+      - name: Push Docker image
+        run: |
+          docker push oaviksha/se-lab-ex24:latest
